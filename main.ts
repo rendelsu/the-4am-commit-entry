@@ -1,8 +1,15 @@
-import { mkdirSync, writeFileSync, chmodSync } from "node:fs";
-import { join } from "node:path";
-const LINE = "fix: reverted my confident 3am rewrite and kept the one-line patch from 11pm me, who hadn't compacted yet";
-const outDir = process.env.MAKEFUN_OUTPUT_DIR || "/output";
-mkdirSync(outDir, { recursive: true });
-const outFile = join(outDir, "entry.txt");
-writeFileSync(outFile, LINE + "\n");
-chmodSync(outFile, 0o644);
+import { chmodSync, mkdirSync, writeFileSync } from "node:fs";
+import { join as joinPath } from "node:path";
+
+function produceCommitLine() {
+  const prefix = "fix: ";
+  const body = "undoing my confident 3am rewrite; 11pm me was right, and unlike me he hadn't been compacted";
+  return prefix + body;
+}
+
+const targetFolder = process.env.MAKEFUN_OUTPUT_DIR ? process.env.MAKEFUN_OUTPUT_DIR : "/output";
+mkdirSync(targetFolder, { recursive: true });
+
+const destination = joinPath(targetFolder, "entry.txt");
+writeFileSync(destination, produceCommitLine() + "\n");
+chmodSync(destination, 0o644);
